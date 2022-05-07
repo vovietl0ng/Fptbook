@@ -1,8 +1,77 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Fptbook.ViewModel.common
+@model List<Fptbook.ViewModel.Home.HomeViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    
-</div>
+
+@foreach (var store in Model){
+    <div class="card-body">
+        <h1 class="mt-4">@store.StoreName</h1>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>ISBN</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Author</th>
+                        <th>Price</th>
+                        <th>Quanlity</th>
+                        <th>Date Created</th>
+                        <th>Price</th>
+                        <th>Pages</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in store.BookList.Items)
+                    {
+                        
+                            <tr>
+                                <td>    
+                                    <img src=@item.ImagePath alt="" />  
+                                </td>
+                                <td>    
+                                    @Html.DisplayFor(modelItem => item.ISBN)
+                                </td>
+                                <td>    
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Author)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Price)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Quanlity)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DateCreated)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Price)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Pages)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Detail", "DetailBook", new { id = item.Id }, new { @class = "btn btn-danger" })
+                                    @Html.ActionLink("Update", "UpdateBook", new { id = item.Id }, new { @class = "btn btn-success" })
+                                    @Html.ActionLink("Delete", "DeleteDocument", new { id = item.Id }, new { @class = "btn btn-primary" })
+                                </td>
+                            </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @await Component.InvokeAsync("Pager", @store.BookList)
+    </div>
+}

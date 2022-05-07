@@ -141,7 +141,7 @@ public class LoginsController : Controller
             PhoneNumber = request.PhoneNumber
         };
         var result = await _userManager.CreateAsync(user, request.Password);
-        await _userManager.AddToRoleAsync(user, "customer");
+        await _userManager.AddToRoleAsync(user, "store");
         var store = new Store()
         {
             Address = request.Address,

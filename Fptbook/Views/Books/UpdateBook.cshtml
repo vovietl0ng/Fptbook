@@ -1,4 +1,4 @@
-﻿@model Fptbook.ViewModel.Book.CreateBookRequest
+﻿@model Fptbook.ViewModel.Book.UpdateBookRequest
 
 @{
     ViewData["Title"] = "Create Book";
@@ -6,21 +6,15 @@
 }
 
 <div class="container-fluid">
-    <h1 class="mt-4">Create Book</h1>
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home page</a></li>
-        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Document">Document</a></li>
-        <li class="breadcrumb-item active">Create Document</li>
-    </ol>
+    <h1 class="mt-4">Update Book</h1>
+    
 
     <div class="card mb-4">
-        <div class="card-header">
-            <a class="btn btn-success" asp-action="Index" asp-controller="Document">Back to list Document</a>
-        </div>
+        
         <div class="card-body">
             <div class="row">
                 <div class="col-md-4">
-                    <form asp-action="CreateBook" method="post">
+                    <form asp-action="UpdateBook" method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                          <div class="form-group">
                             <label asp-for="ISBN" class="control-label"></label>

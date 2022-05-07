@@ -1,12 +1,13 @@
 ﻿using Fptbook.Models.EF;
 using Fptbook.Models.Entity;
 using Fptbook.ViewModel.Category;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Controllers;
 
 namespace Fptbook.Controllers
 {
-    
+    [Authorize]
     public class CategoriesController : BaseController
     {
        

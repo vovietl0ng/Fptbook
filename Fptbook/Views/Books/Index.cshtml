@@ -59,15 +59,17 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
+                        <th>Image</th>
+                        <th>ISBN</th>
                         <th>Name</th>
                         <th>Description</th>
                         <th>Author</th>
                         <th>Price</th>
                         <th>Quanlity</th>
                         <th>Date Created</th>
-                        <th>View</th>
+                        <th>Price</th>
+                        <th>Pages</th>
                         <th>Action</th>
-
                     </tr>
                 </thead>
                 <tbody>
@@ -75,13 +77,14 @@
                     {
                         
                             <tr>
-                                <td>
-                                    <div class="row">
-                                        
-                                        <div class="col-md-9">
-                                            @Html.DisplayFor(modelItem => item.Name)
-                                        </div>
-                                    </div>
+                                <td>    
+                                    <img src=@item.ImagePath alt="" />  
+                                </td>
+                                <td>    
+                                    @Html.DisplayFor(modelItem => item.ISBN)
+                                </td>
+                                <td>    
+                                    @Html.DisplayFor(modelItem => item.Name)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Description)
@@ -102,15 +105,12 @@
                                     @Html.DisplayFor(modelItem => item.Price)
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Detail", "DetailDocument", new { id = item.Id }, new { @class = "btn btn-danger" })
-                                    @Html.ActionLink("Update", "UpdateDocument", new { id = item.Id }, new { @class = "btn btn-success" })
+                                    @Html.DisplayFor(modelItem => item.Pages)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Detail", "DetailBook", new { id = item.Id }, new { @class = "btn btn-danger" })
+                                    @Html.ActionLink("Update", "UpdateBook", new { id = item.Id }, new { @class = "btn btn-success" })
                                     @Html.ActionLink("Delete", "DeleteDocument", new { id = item.Id }, new { @class = "btn btn-primary" })
-                                    @Html.ActionLink("Asign Category", "IndexAssignCategory", new { id = item.Id }, new { @class = "btn btn-primary" })
-                                    @Html.ActionLink("View Chapter", "Index", "Chapter", new { id = item.Id }, new { @class = "btn btn-primary" })
-
-                                    
-
-
                                 </td>
                             </tr>
                     }
@@ -119,8 +119,4 @@
         </div>
         @await Component.InvokeAsync("Pager", Model)
     </div>
-</div>@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+</div>

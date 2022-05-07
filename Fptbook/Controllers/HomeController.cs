@@ -1,66 +1,74 @@
 ﻿using Fptbook.Models;
+using Fptbook.Models.EF;
+using Fptbook.Models.Entity;
+using Fptbook.ViewModel.Book;
+using Fptbook.ViewModel.common;
+using Fptbook.ViewModel.Home;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using WebApp.Controllers;
 
 namespace Fptbook.Controllers
 {
-    [Authorize]
-    public class HomeController : BaseController
+    public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-      
+        private readonly FptDbContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(FptDbContext context, UserManager<AppUser> userManager)
         {
-            _logger = logger;
+            _context = context;
+            _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 10)
         {
-            var usser = User.Identity.Name;
-            return View();
+            var homeVMs = new List<HomeViewModel>();
+            var stores = await _context.Stores.ToListAsync();
+            foreach (var store in stores)
+            {
+                var homeVM = new HomeViewModel();
+                homeVM.StoreName = store.Name;
+
+                var query = await _context.Books.Where(x => x.StoreId == store.Id).ToListAsync();
+                var books = query.AsQueryable();
+                int totalRow = books.Count();
+                var data = books.Skip((pageIndex - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(x => new BookViewModel()
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        DateCreated = x.DateCreated,
+                        Description = x.Description,
+                        Author = x.Author,
+                        Price = x.Price,
+                        Quanlity = x.Quanlity,
+                        ISBN = x.ISBN,
+                        ImagePath = x.ImagePath,
+                        Pages = x.Pages,
+                    }).ToList();
+
+
+                var pagedResult = new PageResult<BookViewModel>()
+                {
+                    TotalRecords = totalRow,
+                    PageIndex = pageIndex,
+                    PageSize = pageSize,
+                    Items = data
+                };
+                homeVM.BookList = pagedResult;
+                homeVMs.Add(homeVM);
+            }
+            return View(homeVMs);
         }
 
-        //public async Task<IActionResult> LoginAsync()
-        //{
-        //    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        //    return View();
-        //}
-        //[HttpPost]
-        //public async Task<IActionResult> Login(LoginRequest request)
-        //{
-
-        //    if (!ModelState.IsValid)
-        //        return View(ModelState);
-
-        //    var token = await _user.Authenticate(request);
-
-        //    var userPrincipal = this.ValidateToken(token);
-        //    var authProperties = new AuthenticationProperties
-        //    {
-        //        ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
-        //        IsPersistent = true
-        //    };
-        //    HttpContext.Session.SetString("Token", token);
-        //    await HttpContext.SignInAsync(
-        //                CookieAuthenticationDefaults.AuthenticationScheme,
-        //                userPrincipal,
-        //                authProperties);
-
-        //    return RedirectToAction("Index", "Home");
-        //}
-
-        //[HttpPost]
-        //public async Task<IActionResult> Logout()
-        //{
-        //    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        //    HttpContext.Session.Remove("Token");
-        //    return RedirectToAction("Login", "User");
-        //}
+        
 
     }
 }
