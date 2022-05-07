@@ -15,7 +15,6 @@ namespace Fptbook.Models.Configuration
             builder.Property(x => x.Description).IsRequired();
             builder.Property(x => x.Author).IsRequired();
             builder.Property(x => x.DateCreated).IsRequired();
-            builder.Property(x => x.Quanlity).IsRequired();
             builder.Property(x => x.Price).IsRequired();
             builder.Property(x => x.ISBN).IsRequired();
             builder.HasOne(t => t.Store).WithMany(pc => pc.Books)

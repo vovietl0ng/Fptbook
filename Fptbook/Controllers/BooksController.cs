@@ -48,7 +48,6 @@ namespace Fptbook.Controllers
                     Description = x.Description,
                     Author = x.Author,
                     Price = x.Price,
-                    Quanlity = x.Quanlity,
                     ISBN = x.ISBN,
                     ImagePath = x.ImagePath,
                     Pages = x.Pages,
@@ -98,7 +97,6 @@ namespace Fptbook.Controllers
             {
                 Name = request.Name,
                 Price = request.Price,
-                Quanlity = request.Quanlity,
                 Description = request.Description,
                 Author = request.Author,
                 ISBN = request.ISBN,
@@ -129,7 +127,6 @@ namespace Fptbook.Controllers
                 Id = id,
                 Name = book.Name,
                 Price = book.Price,
-                Quanlity = book.Quanlity,
                 Description = book.Description,
                 Author = book.Author,
                 ISBN = book.ISBN,
@@ -158,7 +155,7 @@ namespace Fptbook.Controllers
             book.CategoryId = request.CategoryId;  
             book.DateCreated = DateTime.Now;    
             book.Pages = request.Pages;
-            book.Quanlity = request.Quanlity;
+            book.ImagePath = request.ImagePath;
             await _context.SaveChangesAsync();
             TempData["result"] = "Update successfull";
             return RedirectToAction("Index");
@@ -175,7 +172,6 @@ namespace Fptbook.Controllers
                 Id = id,
                 Name = book.Name,
                 Price = book.Price,
-                Quanlity = book.Quanlity,
                 Description = book.Description,
                 Author = book.Author,
                 ISBN = book.ISBN,

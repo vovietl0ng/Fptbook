@@ -8,15 +8,15 @@ namespace Fptbook.Models.Configuration
     {
         public void Configure(EntityTypeBuilder<Order> builder)
         {
-            builder.HasKey(t => new { t.UserId, t.CartId });
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).UseIdentityColumn();
 
             builder.ToTable("Orders");
 
             builder.HasOne(t => t.AppUser).WithMany(pc => pc.Orders)
                 .HasForeignKey(pc => pc.UserId).OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(t => t.Cart).WithMany(pc => pc.Orders)
-              .HasForeignKey(pc => pc.CartId).OnDelete(DeleteBehavior.Restrict);
+            builder.Property(x => x.Status).IsRequired();
         }
     }
 }

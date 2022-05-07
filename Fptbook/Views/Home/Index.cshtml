@@ -20,7 +20,6 @@
                         <th>Description</th>
                         <th>Author</th>
                         <th>Price</th>
-                        <th>Quanlity</th>
                         <th>Date Created</th>
                         <th>Price</th>
                         <th>Pages</th>
@@ -50,9 +49,7 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Price)
                                 </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Quanlity)
-                                </td>
+                                
                                 <td>
                                     @Html.DisplayFor(modelItem => item.DateCreated)
                                 </td>
@@ -63,9 +60,12 @@
                                     @Html.DisplayFor(modelItem => item.Pages)
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Detail", "DetailBook", new { id = item.Id }, new { @class = "btn btn-danger" })
-                                    @Html.ActionLink("Update", "UpdateBook", new { id = item.Id }, new { @class = "btn btn-success" })
-                                    @Html.ActionLink("Delete", "DeleteDocument", new { id = item.Id }, new { @class = "btn btn-primary" })
+                                @if (User.IsInRole("customer"))
+                                {
+                                    @Html.ActionLink("Add To Card", "AddToCart","Customers", new { id = item.Id }, new { @class = "btn btn-danger" })
+                                }
+                                
+                                    
                                 </td>
                             </tr>
                     }

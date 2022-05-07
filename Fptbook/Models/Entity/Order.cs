@@ -2,12 +2,13 @@
 {
     public class Order
     {
+        public int Id { get; set; }
         public Guid UserId { get; set; }
         public AppUser AppUser { get; set; }
-        public int CartId { get; set; }
+        public bool Status { get; set; }
+        public ICollection<CartItem> CartItems { get; set; }
         public Cart Cart { get; set; }
-        public DateTime OrderDate { get; set; }
-        public int TotalPrice { get; set; }
+
 
     }
 }

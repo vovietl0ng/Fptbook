@@ -26,7 +26,7 @@ namespace Fptbook.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5)
         {
             var homeVMs = new List<HomeViewModel>();
             var stores = await _context.Stores.ToListAsync();
@@ -48,7 +48,6 @@ namespace Fptbook.Controllers
                         Description = x.Description,
                         Author = x.Author,
                         Price = x.Price,
-                        Quanlity = x.Quanlity,
                         ISBN = x.ISBN,
                         ImagePath = x.ImagePath,
                         Pages = x.Pages,

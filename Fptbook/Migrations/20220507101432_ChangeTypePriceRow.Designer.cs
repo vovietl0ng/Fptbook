@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fptbook.Migrations
 {
     [DbContext(typeof(FptDbContext))]
-    [Migration("20220507025348_ChangeTypePageAndPriceRow")]
-    partial class ChangeTypePageAndPriceRow
+    [Migration("20220507101432_ChangeTypePriceRow")]
+    partial class ChangeTypePriceRow
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -152,9 +152,6 @@ namespace Fptbook.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<int>("Quanlity")
-                        .HasColumnType("int");
-
                     b.Property<int>("StoreId")
                         .HasColumnType("int");
 
@@ -175,39 +172,67 @@ namespace Fptbook.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RecipientAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecipientName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecipientPhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("TotalPrice")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("OrderId")
+                        .IsUnique();
 
                     b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("Fptbook.Models.Entity.CartItem", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
                     b.Property<int>("BookId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CartId")
+                    b.Property<int?>("CartId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Price")
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.HasKey("BookId", "CartId");
+                    b.Property<double>("TotalPrice")
+                        .HasColumnType("float");
 
-                    b.HasIndex("BookId")
-                        .IsUnique();
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
 
                     b.HasIndex("CartId");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("CartItems", (string)null);
                 });
@@ -238,21 +263,21 @@ namespace Fptbook.Migrations
 
             modelBuilder.Entity("Fptbook.Models.Entity.Order", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CartId")
-                        .HasColumnType("int");
+                    b.HasKey("Id");
 
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("TotalPrice")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "CartId");
-
-                    b.HasIndex("CartId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders", (string)null);
                 });
@@ -406,42 +431,48 @@ namespace Fptbook.Migrations
 
             modelBuilder.Entity("Fptbook.Models.Entity.Cart", b =>
                 {
-                    b.HasOne("Fptbook.Models.Entity.AppUser", "AppUser")
-                        .WithMany("Carts")
-                        .HasForeignKey("UserId")
+                    b.HasOne("Fptbook.Models.Entity.Order", "Order")
+                        .WithOne("Cart")
+                        .HasForeignKey("Fptbook.Models.Entity.Cart", "OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AppUser");
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Fptbook.Models.Entity.CartItem", b =>
                 {
                     b.HasOne("Fptbook.Models.Entity.Book", "Book")
-                        .WithOne("CartItem")
-                        .HasForeignKey("Fptbook.Models.Entity.CartItem", "BookId")
+                        .WithMany("CartItems")
+                        .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Fptbook.Models.Entity.Cart", "Cart")
+                    b.HasOne("Fptbook.Models.Entity.Cart", null)
                         .WithMany("CartItems")
-                        .HasForeignKey("CartId")
+                        .HasForeignKey("CartId");
+
+                    b.HasOne("Fptbook.Models.Entity.Order", "Order")
+                        .WithMany("CartItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Fptbook.Models.Entity.AppUser", "User")
+                        .WithMany("CartItems")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Book");
 
-                    b.Navigation("Cart");
+                    b.Navigation("Order");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Fptbook.Models.Entity.Order", b =>
                 {
-                    b.HasOne("Fptbook.Models.Entity.Cart", "Cart")
-                        .WithMany("Orders")
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Fptbook.Models.Entity.AppUser", "AppUser")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
@@ -449,8 +480,6 @@ namespace Fptbook.Migrations
                         .IsRequired();
 
                     b.Navigation("AppUser");
-
-                    b.Navigation("Cart");
                 });
 
             modelBuilder.Entity("Fptbook.Models.Entity.Store", b =>
@@ -466,7 +495,7 @@ namespace Fptbook.Migrations
 
             modelBuilder.Entity("Fptbook.Models.Entity.AppUser", b =>
                 {
-                    b.Navigation("Carts");
+                    b.Navigation("CartItems");
 
                     b.Navigation("Orders");
 
@@ -476,20 +505,25 @@ namespace Fptbook.Migrations
 
             modelBuilder.Entity("Fptbook.Models.Entity.Book", b =>
                 {
-                    b.Navigation("CartItem")
-                        .IsRequired();
+                    b.Navigation("CartItems");
                 });
 
             modelBuilder.Entity("Fptbook.Models.Entity.Cart", b =>
                 {
                     b.Navigation("CartItems");
-
-                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("Fptbook.Models.Entity.Category", b =>
                 {
                     b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("Fptbook.Models.Entity.Order", b =>
+                {
+                    b.Navigation("Cart")
+                        .IsRequired();
+
+                    b.Navigation("CartItems");
                 });
 
             modelBuilder.Entity("Fptbook.Models.Entity.Store", b =>

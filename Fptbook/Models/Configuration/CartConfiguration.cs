@@ -12,8 +12,9 @@ namespace Fptbook.Models.Configuration
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).UseIdentityColumn();
             builder.Property(x => x.TotalPrice).IsRequired();
-            builder.HasOne(t => t.AppUser).WithMany(pc => pc.Carts)
-               .HasForeignKey(pc => pc.UserId);
+            builder.HasOne(s => s.Order)
+            .WithOne(ad => ad.Cart)
+            .HasForeignKey<Cart>(ad => ad.OrderId);
         }
     }
 }

@@ -6,9 +6,9 @@ namespace Fptbook.Models.Entity
     {
         public string FullName { get; set; }
         public string Address { get; set; }
-        public ICollection< Cart> Carts { get; set; }
         public Store Store { get; set; }
         public ICollection<Order> Orders { get; set; }
+        public ICollection<CartItem> CartItems { get; set; }
 
 
     }
