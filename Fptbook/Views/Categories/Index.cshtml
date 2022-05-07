@@ -1,4 +1,4 @@
-﻿@model List<Fptbook.Models.Entity.Category>
+﻿@model List<Fptbook.ViewModel.Category.CategoryViewModel>
 
 
 @{
@@ -73,9 +73,8 @@
                             </td>
 
                             <td>
-                                @Html.ActionLink("Update", "UpdateCategory", new { id = item.Id }) |
-                                @Html.ActionLink("Detail", "Detail", new { id = item.Id }) |
-                                @Html.ActionLink("Delete", "Delete", new { id = item.Id }) |
+                                @Html.ActionLink("Update", "UpdateCategory", new { id = item.Id }) |           
+                                @Html.ActionLink("Delete", "DeleteCategory", new { id = item.Id }) |
                             </td>
                         </tr>
                     }

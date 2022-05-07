@@ -1,12 +1,13 @@
 ﻿using Fptbook.Models.EF;
 using Fptbook.Models.Entity;
-using Fptbook.ViewModel;
+using Fptbook.ViewModel.Category;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.Controllers;
 
 namespace Fptbook.Controllers
 {
     
-    public class CategoriesController : Controller
+    public class CategoriesController : BaseController
     {
        
         private readonly FptDbContext _context;
@@ -16,10 +17,21 @@ namespace Fptbook.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+        public IActionResult Index(string keyword)
         {
-            var categories = _context.Categories.ToList();
-            return View(categories);
+            var query = _context.Categories.ToList();
+            var categories = query.AsQueryable();
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                categories = categories.Where(x => x.Name.Contains(keyword));
+            }
+            var result = categories.Select(x => new CategoryViewModel()
+            {
+                Name = x.Name,
+                Id = x.Id,
+                Description = x.Description
+            }).ToList();
+            return View(result);
         }
         [HttpGet]
         public IActionResult CreateCategory()
@@ -29,8 +41,13 @@ namespace Fptbook.Controllers
         [HttpPost]
         public IActionResult CreateCategory(CreateCategoryRequest request)
         {
+            var category = _context.Categories.FirstOrDefault(x => x.Name == request.Name);
+            if (category != null)
+            {
+                throw new Exception("category is exist");
+            }
             //tao category moi , tao ten , mo ta, ngay
-            var category = new Category()
+            category = new Category()
             {
                 Name = request.Name,
                 Description = request.Description,
@@ -59,8 +76,14 @@ namespace Fptbook.Controllers
         [HttpPost]
         public IActionResult UpdateCategory(UpdateCategoryRequest request )
         {
+            //kiem tra
+            var category = _context.Categories.FirstOrDefault(x => x.Name == request.Name);
+            if (category != null)
+            {
+                throw new Exception("category is exist");
+            }
             //tim category
-            var category = _context.Categories.Find(request.Id);
+            category = _context.Categories.Find(request.Id);
             //update cai moi
             category.Name = request.Name;   
             category.Description = request.Description;
@@ -69,5 +92,14 @@ namespace Fptbook.Controllers
             
             return RedirectToAction("Index");
         }
+       //HTTP delete
+        public IActionResult DeleteCategory(int id)
+        {
+            var category = _context.Categories.Find(id);
+            _context.Categories.Remove(category);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+       
     }
 }

@@ -1,11 +1,12 @@
 ﻿using Fptbook.Models.Configuration;
 using Fptbook.Models.Entity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Fptbook.Models.EF
 {
-    public class FptDbContext :DbContext
+    public class FptDbContext : IdentityDbContext<AppUser, AppRole, Guid>
     {
         public FptDbContext(DbContextOptions options) : base(options)
         {

@@ -1,0 +1,126 @@
+﻿@using Fptbook.ViewModel.common
+@model PageResult<Fptbook.ViewModel.Book.BookViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container-fluid">
+    <h1 class="mt-4">Book</h1>
+    
+    
+@section Scripts{
+    <script>
+        setTimeout(function () {
+            $('msgAlert').fadeOut('slow');
+        }, 2000);
+    </script>
+}
+    <div class="card mb-12">
+        <div class="card-header">
+
+            <div class="row">
+                
+               
+                    <div class="col-md-6 col-xs-12">
+                        <a class="btn btn-success" asp-controller="Books" asp-action="CreateBook">Create new Book</a>
+                    </div>
+                
+                <div class="col-md-6 col-xs-12">
+                    <form asp-action="Index" method="get">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <input type="text"  name="keyword" class="form-control" />
+                            </div>
+
+                            
+                            <div class="cold-md-4">
+                                <button type="submit" class="btn btn-primary">Search</button>
+                                <button type="button" onclick="window.location.href='/Books/Index'" class="btn btn-dark">Reset</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            @if (ViewBag.SuccessMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-success" role="alert">
+                    @ViewBag.SuccessMsg
+                </div>
+            }
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Author</th>
+                        <th>Price</th>
+                        <th>Quanlity</th>
+                        <th>Date Created</th>
+                        <th>View</th>
+                        <th>Action</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        
+                            <tr>
+                                <td>
+                                    <div class="row">
+                                        
+                                        <div class="col-md-9">
+                                            @Html.DisplayFor(modelItem => item.Name)
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Author)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Price)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Quanlity)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DateCreated)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Price)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Detail", "DetailDocument", new { id = item.Id }, new { @class = "btn btn-danger" })
+                                    @Html.ActionLink("Update", "UpdateDocument", new { id = item.Id }, new { @class = "btn btn-success" })
+                                    @Html.ActionLink("Delete", "DeleteDocument", new { id = item.Id }, new { @class = "btn btn-primary" })
+                                    @Html.ActionLink("Asign Category", "IndexAssignCategory", new { id = item.Id }, new { @class = "btn btn-primary" })
+                                    @Html.ActionLink("View Chapter", "Index", "Chapter", new { id = item.Id }, new { @class = "btn btn-primary" })
+
+                                    
+
+
+                                </td>
+                            </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @await Component.InvokeAsync("Pager", Model)
+    </div>
+</div>@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
