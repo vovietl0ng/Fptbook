@@ -34,6 +34,7 @@ namespace Fptbook.Controllers
             {
                 var homeVM = new HomeViewModel();
                 homeVM.StoreName = store.Name;
+                homeVM.StoreId = store.Id;
 
                 var query = await _context.Books.Where(x => x.StoreId == store.Id).ToListAsync();
                 var books = query.AsQueryable();

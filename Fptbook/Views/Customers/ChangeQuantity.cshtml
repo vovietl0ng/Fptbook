@@ -1,12 +1,11 @@
-﻿@model Fptbook.ViewModel.Customers.AddToCartViewModel
+﻿@model Fptbook.ViewModel.Customers.ChangeQuantityViewModel
 @{
-    ViewData["Title"] = "Add To Cart";
+    ViewData["Title"] = "Change Quantity";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
 <div class="container-fluid">
-    <h1 class="mt-4">Add to cart</h1>
+    <h1 class="mt-4">Change Quantity</h1>
     
 
     <div class="card mb-4">
@@ -16,18 +15,16 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-4">
-                    <form asp-action="AddToCart" method="post">
+                    <form asp-action="ChangeQuantity" method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                         <div class="form-group">
-                            <label asp-for="Quantily" class="control-label"></label>
-                            <input asp-for="Quantily" class="form-control" />
-                            <span asp-validation-for="Quantily" class="text-danger"></span>
+                            <label asp-for="Quantity" class="control-label"></label>
+                            <input asp-for="Quantity" class="form-control" />
+                            <span asp-validation-for="Quantity" class="text-danger"></span>
                         </div>
-                        <input type="hidden" name="OrderId" value=@Model.OrderId />
-                        <input type="hidden" name="BookId" value=@Model.BookId />
                         <div class="form-group">
-                            <input type="submit" value="Add" class="btn btn-primary" />
+                            <input type="submit" value="Change" class="btn btn-primary" />
                         </div>
                     </form>
                 </div>

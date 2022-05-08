@@ -15,6 +15,8 @@ namespace Fptbook.Models.Configuration
 
             builder.HasOne(t => t.AppUser).WithMany(pc => pc.Orders)
                 .HasForeignKey(pc => pc.UserId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(t => t.Store).WithMany(pc => pc.Orders)
+                .HasForeignKey(pc => pc.StoreId);
 
             builder.Property(x => x.Status).IsRequired();
         }

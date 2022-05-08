@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fptbook.Migrations
 {
     [DbContext(typeof(FptDbContext))]
-    [Migration("20220507101432_ChangeTypePriceRow")]
-    partial class ChangeTypePriceRow
+    [Migration("20220508104207_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -187,8 +187,8 @@ namespace Fptbook.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TotalPrice")
-                        .HasColumnType("int");
+                    b.Property<double>("TotalPrice")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -272,10 +272,15 @@ namespace Fptbook.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
+                    b.Property<int>("StoreId")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StoreId");
 
                     b.HasIndex("UserId");
 
@@ -473,6 +478,12 @@ namespace Fptbook.Migrations
 
             modelBuilder.Entity("Fptbook.Models.Entity.Order", b =>
                 {
+                    b.HasOne("Fptbook.Models.Entity.Store", "Store")
+                        .WithMany("Orders")
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Fptbook.Models.Entity.AppUser", "AppUser")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
@@ -480,6 +491,8 @@ namespace Fptbook.Migrations
                         .IsRequired();
 
                     b.Navigation("AppUser");
+
+                    b.Navigation("Store");
                 });
 
             modelBuilder.Entity("Fptbook.Models.Entity.Store", b =>
@@ -529,6 +542,8 @@ namespace Fptbook.Migrations
             modelBuilder.Entity("Fptbook.Models.Entity.Store", b =>
                 {
                     b.Navigation("Books");
+
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

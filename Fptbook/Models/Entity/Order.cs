@@ -8,6 +8,8 @@
         public bool Status { get; set; }
         public ICollection<CartItem> CartItems { get; set; }
         public Cart Cart { get; set; }
+        public int StoreId { get; set; }
+        public Store Store { get; set; }
 
 
     }

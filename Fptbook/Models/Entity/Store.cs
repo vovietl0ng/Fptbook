@@ -9,6 +9,7 @@
         public Guid UserId { get; set; }
         public AppUser AppUser { get; set; }
         public ICollection<Book> Books { get; set; }
+        public ICollection<Order> Orders { get; set; }
 
     }
 }

@@ -1,0 +1,44 @@
+﻿@model List<Fptbook.ViewModel.Book.CartHistoryViewModel>
+
+@{
+    ViewData["Title"] = "History";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@foreach (var order in Model){
+    <div class="card-body">
+        <h1 class="mt-4">Order by: @order.RecipientName</h1>
+        <h3 class="mt-4">Address: @order.RecipientAddress</h3>
+        <h3 class="mt-4">Phone Number: @order.RecipientPhoneNumber</h3>
+        
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Book Name</th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in order.ListItem)
+                    {
+                        
+                            <tr>
+                                <td>    
+                                    @Html.DisplayFor(modelItem => item.BookName)
+                                </td>
+                                <td>    
+                                    @Html.DisplayFor(modelItem => item.Quantity)
+                                </td>
+                                <td>    
+                                    @Html.DisplayFor(modelItem => item.TotalPrice)
+                                </td> 
+                            </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

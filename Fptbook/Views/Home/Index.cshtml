@@ -10,6 +10,11 @@
 @foreach (var store in Model){
     <div class="card-body">
         <h1 class="mt-4">@store.StoreName</h1>
+        @if (User.IsInRole("customer"))
+        {
+        @Html.ActionLink("View Cart", "ViewCart","Customers", new { id = store.StoreId }, new { @class = "btn btn-danger" })
+            
+        }
         <div class="table-responsive">
             <table class="table table-bordered">
                 <thead>

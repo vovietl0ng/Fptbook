@@ -3,6 +3,7 @@ using Fptbook.Models.Entity;
 using Fptbook.ViewModel.Book;
 using Fptbook.ViewModel.Category;
 using Fptbook.ViewModel.common;
+using Fptbook.ViewModel.Customers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -182,6 +183,43 @@ namespace Fptbook.Controllers
                 StoreName = store.Name,
             };
             return View(detailBook);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ViewAllCartHistory()
+        {
+            var listCartHistory = new List<CartHistoryViewModel>();
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+            var store = await _context.Stores.FirstOrDefaultAsync(x => x.UserId == user.Id);
+
+            var orders = await _context.Orders.Where(x => x.StoreId == store.Id && x.Status == false).ToListAsync();
+            foreach (var order in orders)
+            {
+                var items = await _context.CartItems.Where(x => x.OrderId == order.Id).ToListAsync();
+                var viewCartVMs = new List<ViewCartItemViewModel>();
+                foreach (var cartItem in items)
+                {
+                    var book = await _context.Books.FindAsync(cartItem.BookId);
+                    var viewCartVM = new ViewCartItemViewModel()
+                    {
+                        Id = cartItem.Id,
+                        BookName = book.Name,
+                        Quantity = cartItem.Quantity,
+                        TotalPrice = Math.Round(cartItem.TotalPrice, 3)
+                    };
+                    viewCartVMs.Add(viewCartVM);
+                }
+                var cart = await _context.Carts.FirstOrDefaultAsync(x => x.OrderId == order.Id);
+                var cartHistory = new CartHistoryViewModel()
+                {
+                    RecipientAddress = cart.RecipientAddress,
+                    RecipientName = cart.RecipientName,
+                    RecipientPhoneNumber = cart.RecipientPhoneNumber,
+                    ListItem = viewCartVMs
+                };
+                listCartHistory.Add(cartHistory);
+            }
+            return View(listCartHistory);
         }
     }
 }
