@@ -30,7 +30,7 @@ namespace Fptbook.Controllers
             var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
             var store = await _context.Stores.FirstOrDefaultAsync(x => x.UserId == user.Id);
             var query = await _context.Books.Where(x => x.StoreId == store.Id).ToListAsync();
-            var books = query.AsQueryable();
+            var books = query.OrderByDescending(x => x.DateCreated).AsQueryable();
             
             if (!string.IsNullOrEmpty(keyword))
             {
@@ -182,6 +182,7 @@ namespace Fptbook.Controllers
                 StoreName = store.Name,
             };
             return View(detailBook);
+            
         }
 
         [HttpGet]
@@ -220,5 +221,14 @@ namespace Fptbook.Controllers
             }
             return View(listCartHistory);
         }
+        public IActionResult DeleteBook(int id)
+        {
+            var book = _context.Books.Find(id);
+            _context.Books.Remove(book);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+       
     }
+    
 }

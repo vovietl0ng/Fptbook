@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using WebApp.Controllers;
+using System.Linq;
 
 namespace Fptbook.Controllers
 {
@@ -35,9 +36,9 @@ namespace Fptbook.Controllers
                 var homeVM = new HomeViewModel();
                 homeVM.StoreName = store.Name;
                 homeVM.StoreId = store.Id;
-
-                var query = await _context.Books.Where(x => x.StoreId == store.Id).ToListAsync();
+                var query = await _context.Books.Where(x => x.StoreId == store.Id).ToListAsync();         
                 var books = query.AsQueryable();
+                books = books.OrderBy(x => x.Pages);
                 int totalRow = books.Count();
                 var data = books.Skip((pageIndex - 1) * pageSize)
                     .Take(pageSize)
