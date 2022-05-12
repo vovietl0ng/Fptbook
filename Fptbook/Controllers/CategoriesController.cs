@@ -22,16 +22,19 @@ namespace Fptbook.Controllers
         {
             var query = _context.Categories.ToList();
             var categories = query.AsQueryable();
-            if (!string.IsNullOrEmpty(keyword))
+            
+            if (keyword != null)
             {
                 categories = categories.Where(x => x.Name.Contains(keyword));
             }
+
             var result = categories.Select(x => new CategoryViewModel()
             {
                 Name = x.Name,
                 Id = x.Id,
                 Description = x.Description
             }).ToList();
+
             return View(result);
         }
         [HttpGet]
@@ -39,6 +42,7 @@ namespace Fptbook.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult CreateCategory(CreateCategoryRequest request)
         {

@@ -213,5 +213,22 @@ namespace Fptbook.Controllers
             smtp.Disconnect(true);
             return RedirectToAction("ViewCart", new { id = request.StoreId });
         }
+        public IActionResult Helpscreen()
+        {
+            return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+            var profile =  new ViewProfileViewModel()
+            {
+                FullName = user.FullName,
+                Address = user.Address,
+            };
+            return View(profile);
+        }
+
+       
     }
 }

@@ -74,7 +74,6 @@ namespace Fptbook.Controllers
         public IActionResult CreateBook()
         {
             var categories = _context.Categories.ToList();
-            var store = _context.Stores.ToList();
             ViewBag.Categories = categories.Select(x => new SelectListItem()
             {
                 Text = x.Name,
