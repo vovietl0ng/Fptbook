@@ -228,7 +228,58 @@ namespace Fptbook.Controllers
             };
             return View(profile);
         }
+        [HttpGet]
+        public async Task<IActionResult> Update(int id)
+        {
+            
+            if (User.IsInRole("user"))
+            {
+                var userName = User.Identity.Name;
+                var currentUser = await _context.GetUserByUserName(userName);
+                result = await _context.GetById(id, currentUser.ResultObj.Id);
+            }
+            else
+            {
+                result = await _context.GetById(id, null);
 
-       
+            }
+
+            if (result.IsSuccessed)
+            {
+                var user = result.ResultObj;
+                var updateRequest = new UserUpdateRequest()
+                {
+                   
+                    FullName = user.FullName,
+                    Address = user.Address
+                   
+                };
+                return View(updateRequest);
+            }
+            
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> Update(UserUpdateRequest request)
+        {
+            if (!ModelState.IsValid)
+                return View();
+
+            var result = await _context.UpdateUser(request.Id, request);
+            if (result.IsSuccessed)
+            {
+                TempData["result"] = "Update Successfull";
+                return RedirectToAction("Index");
+            }
+
+
+            ModelState.AddModelError("", result.Message);
+            return View(request);
+        }
+        
+
+
     }
 }
